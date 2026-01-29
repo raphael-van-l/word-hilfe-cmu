@@ -5,6 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Word-Hilfe für CMU Projektarbeiten | Formatierung leicht gemacht</title>
     <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-section: #fafafa;
+            --text-primary: #2c2c2c;
+            --text-secondary: #3a3a3a;
+            --border-color: #e0e0e0;
+            --shadow: rgba(0,0,0,0.1);
+            --tip-bg: #f0fff4;
+            --warning-bg: #fff5f5;
+            --cmu-bg: #e8f8ed;
+            --table-hover: #f0fff4;
+            --table-stripe: #fafafa;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #0d0d0d;
+            --bg-section: #2d2d2d;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --border-color: #404040;
+            --shadow: rgba(0,0,0,0.5);
+            --tip-bg: #1a3a1a;
+            --warning-bg: #3a1a1a;
+            --cmu-bg: #1a3a2a;
+            --table-hover: #2a4a2a;
+            --table-stripe: #252525;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -14,18 +44,20 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
             line-height: 1.6;
-            color: #2c2c2c;
-            background: #f5f5f5;
+            color: var(--text-primary);
+            background: var(--bg-secondary);
             padding: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: white;
+            background: var(--bg-primary);
             border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 40px var(--shadow);
             overflow: hidden;
+            transition: background-color 0.3s ease;
         }
 
         header {
@@ -108,27 +140,57 @@
             box-shadow: 0 6px 20px rgba(23, 162, 59, 0.4);
         }
 
+        .theme-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .theme-btn {
+            padding: 12px 35px;
+            border: 2px solid #17a23b;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 3px 8px var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(23, 162, 59, 0.3);
+        }
+
         .section {
             margin-bottom: 40px;
             padding: 25px;
-            background: #fafafa;
+            background: var(--bg-section);
             border-radius: 10px;
             border-left: 5px solid #17a23b;
+            transition: background-color 0.3s ease;
         }
 
         .section h2 {
-            color: #2c2c2c;
+            color: var(--text-primary);
             margin-bottom: 20px;
             font-size: 1.8em;
             display: flex;
             align-items: center;
             gap: 10px;
+            transition: color 0.3s ease;
         }
 
         .section h3 {
-            color: #3a3a3a;
+            color: var(--text-secondary);
             margin: 20px 0 10px 0;
             font-size: 1.3em;
+            transition: color 0.3s ease;
         }
 
         .icon {
@@ -281,6 +343,30 @@
             text-align: center;
         }
 
+        .toc-link {
+            display: block;
+            padding: 15px 20px;
+            background: #f8f8f8;
+            border: 2px solid #17a23b;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #2c2c2c;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .toc-link:hover {
+            background: #17a23b;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(23, 162, 59, 0.3);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         @media (max-width: 768px) {
             header h1 {
                 font-size: 1.8em;
@@ -304,6 +390,11 @@
             .platform-btn {
                 padding: 12px 25px;
                 font-size: 1em;
+            }
+
+            .toc-link {
+                padding: 12px 15px;
+                font-size: 0.95em;
             }
 
             table {
@@ -356,6 +447,14 @@
         </header>
 
         <div class="content">
+            <!-- Dark Mode Toggle -->
+            <div class="theme-toggle">
+                <button class="theme-btn" onclick="toggleTheme()">
+                    <span id="theme-icon">🌙</span>
+                    <span id="theme-text">Dark Mode</span>
+                </button>
+            </div>
+
             <div class="platform-selector-notice">
                 <h3>⚠️ Wichtig: Wähle dein Betriebssystem!</h3>
                 <p>Bitte wähle unten aus, ob du <strong>Windows</strong> oder <strong>Mac</strong> verwendest. Die Tastenkombinationen (Shortcuts) unterscheiden sich je nach System. Ohne Auswahl werden dir die Shortcuts nicht angezeigt!</p>
@@ -366,8 +465,27 @@
                 <button class="platform-btn" onclick="showPlatform('mac')">🍎 Mac</button>
             </div>
 
+            <!-- Interaktives Inhaltsverzeichnis -->
+            <div class="section" style="background: white; border-left: 5px solid #17a23b;">
+                <h2><span class="icon">📑</span> Inhaltsverzeichnis</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 20px;">
+                    <a href="#download" class="toc-link">📥 CMU-Vorlage herunterladen</a>
+                    <a href="#formatvorlagen" class="toc-link">🎨 Wichtige Formatvorlagen</a>
+                    <a href="#anwenden" class="toc-link">✍️ Formatvorlagen anwenden</a>
+                    <a href="#inhaltsverzeichnis" class="toc-link">📋 Inhaltsverzeichnis erstellen</a>
+                    <a href="#copypaste" class="toc-link">📋 Copy & Paste richtig</a>
+                    <a href="#seitenzahlen" class="toc-link">🔢 Seitenzahlen</a>
+                    <a href="#abbildungen" class="toc-link">🖼️ Abbildungen & Tabellen</a>
+                    <a href="#literatur" class="toc-link">📚 Literaturverzeichnis</a>
+                    <a href="#shortcuts" class="toc-link">⌨️ Tastenkombinationen</a>
+                    <a href="#probleme" class="toc-link">🔧 Häufige Probleme</a>
+                    <a href="#checkliste" class="toc-link">✅ Checkliste vor Abgabe</a>
+                    <a href="#quick-reference" class="toc-link">⚡ Quick Reference</a>
+                </div>
+            </div>
+
             <!-- Vorlage herunterladen -->
-            <div class="section">
+            <div id="download" class="section">
                 <h2><span class="icon">📥</span> CMU-Vorlage herunterladen</h2>
                 
                 <div class="cmu-specific">
@@ -389,7 +507,7 @@
             </div>
 
             <!-- CMU Vorlage verwenden -->
-            <div class="section">
+            <div id="formatvorlagen" class="section">
                 <h2><span class="icon">🎨</span> Wichtige CMU-Formatvorlagen</h2>
                 
                 <div class="cmu-specific">
@@ -431,7 +549,7 @@
             </div>
 
             <!-- Formatvorlagen richtig nutzen -->
-            <div class="section">
+            <div id="anwenden" class="section">
                 <h2><span class="icon">🎨</span> CMU-Formatvorlagen richtig anwenden</h2>
                 
                 <div class="warning">
@@ -482,7 +600,7 @@
             </div>
 
             <!-- Inhaltsverzeichnis -->
-            <div class="section">
+            <div id="inhaltsverzeichnis" class="section">
                 <h2><span class="icon">📑</span> Automatisches Inhaltsverzeichnis</h2>
                 
                 <div class="cmu-specific">
@@ -540,7 +658,7 @@
             </div>
 
             <!-- Copy & Paste -->
-            <div class="section">
+            <div id="copypaste" class="section">
                 <h2><span class="icon">📋</span> Copy & Paste ohne Formatierungschaos</h2>
                 
                 <p>Wenn du Text aus dem Internet, PDFs oder anderen Dokumenten kopierst, kommt die Formatierung mit und zerstört dein Layout!</p>
@@ -583,7 +701,7 @@
             </div>
 
             <!-- Seitenzahlen -->
-            <div class="section">
+            <div id="seitenzahlen" class="section">
                 <h2><span class="icon">🔢</span> Seitenzahlen</h2>
                 
                 <div class="cmu-specific">
@@ -611,7 +729,7 @@
             </div>
 
             <!-- Abbildungen und Tabellen -->
-            <div class="section">
+            <div id="abbildungen" class="section">
                 <h2><span class="icon">🖼️</span> Abbildungen und Tabellen</h2>
 
                 <h3>Abbildung mit Beschriftung einfügen:</h3>
@@ -646,7 +764,7 @@
             </div>
 
             <!-- Literaturverzeichnis -->
-            <div class="section">
+            <div id="literatur" class="section">
                 <h2><span class="icon">📚</span> Literaturverzeichnis</h2>
 
                 <div class="cmu-specific">
@@ -673,7 +791,7 @@
             </div>
 
             <!-- Wichtige Shortcuts -->
-            <div class="section">
+            <div id="shortcuts" class="section">
                 <h2><span class="icon">⌨️</span> Die wichtigsten Tastenkombinationen</h2>
                 
                 <h3 class="windows-only">Windows:</h3>
@@ -770,7 +888,7 @@
             </div>
 
             <!-- Häufige Probleme -->
-            <div class="section">
+            <div id="probleme" class="section">
                 <h2><span class="icon">🔧</span> Häufige Probleme & Lösungen</h2>
 
                 <h3>Problem: Formatierung verschiebt sich beim Einfügen</h3>
@@ -813,7 +931,7 @@
             </div>
 
             <!-- Checkliste vor Abgabe -->
-            <div class="section">
+            <div id="checkliste" class="section">
                 <h2><span class="icon">✅</span> Checkliste vor der Abgabe</h2>
                 
                 <div class="cmu-specific">
@@ -857,7 +975,7 @@
             </div>
 
             <!-- Quick Reference -->
-            <div class="section">
+            <div id="quick-reference" class="section">
                 <h2><span class="icon">⚡</span> Quick Reference - Die 5 wichtigsten Regeln</h2>
                 
                 <ol style="font-size: 1.1em; line-height: 1.8;">
@@ -957,6 +1075,39 @@
 
         // Initialize with Windows view
         showPlatform('windows');
+
+        // Theme Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update button text and icon
+            const themeIcon = document.getElementById('theme-icon');
+            const themeText = document.getElementById('theme-text');
+            
+            if (newTheme === 'dark') {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Light Mode';
+            } else {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Dark Mode';
+            }
+        }
+
+        // Load saved theme on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            if (savedTheme === 'dark') {
+                document.getElementById('theme-icon').textContent = '☀️';
+                document.getElementById('theme-text').textContent = 'Light Mode';
+            }
+        });
     </script>
 </body>
 </html>
